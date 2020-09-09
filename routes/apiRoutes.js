@@ -1,6 +1,6 @@
 const express = require('express');
 const fs = require('fs');
-const notesData = require("../db/db.json");
+// const notesData = require("../db/db.json");
 
 
 const router = express.Router();
@@ -16,14 +16,22 @@ const router = express.Router();
 // ---------------------------------------------------------------------------
 
 router.get("/notes", function (req, res) {
-    res.json(notesData);
+    fs.readFile('../db/db.json', 'utf-8', (err, jsonString) => {
+        if (err) console.log(err);
+        try {
+            const note = JSON.parse(jsonString);
+            
+            return res.json(note);
+        } catch (err) {
+            console.log('Error parsing JSON', err);
+        }
+    })
 });
 
 
 router.post("/notes", function (req, res) {
-    console.log(req.body)
 
-    data = JSON.stringify(req.body, null, 2);
+    const data = JSON.stringify(req.body, null, 2);
 
     fs.appendFile('./db/db.json', data, (err) => {
         if (err) throw err;
