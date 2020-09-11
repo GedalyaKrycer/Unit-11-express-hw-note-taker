@@ -1,6 +1,6 @@
 # Express Note Taker 
 
-# [View Deployed Site]()
+# [View Deployed Site](https://express-note-book.herokuapp.com/)
 
 ## Objective 
 The goal was to add an express server functionality to a prebuilt note taker app, connecting the front- and back-ends. 
