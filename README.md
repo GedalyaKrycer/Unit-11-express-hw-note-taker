@@ -14,3 +14,8 @@ The goal was to add an express server functionality to a prebuilt note taker app
 * Express routes are used for the API, but also to direct traffic to the correct URL. Any slug given that isn't `/notes` get redirected to the homepage. 
 
 * Site is deployed to Heroku
+
+
+## Demo
+
+![Note Taker Demo](./assets/note-taker-demo.gif)
