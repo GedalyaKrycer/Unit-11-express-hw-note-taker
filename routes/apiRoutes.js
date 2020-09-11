@@ -1,6 +1,10 @@
 const express = require('express');
 const fs = require('fs');
-// const notesData = require("../db/db.json");
+const { v4: uuidv4 } = require('uuid');
+let notesData = require("../db/db.json");
+
+// UUID for ids
+
 
 
 const router = express.Router();
@@ -16,47 +20,44 @@ const router = express.Router();
 // ---------------------------------------------------------------------------
 
 router.get("/notes", function (req, res) {
-    fs.readFile('../db/db.json', 'utf-8', (err, jsonString) => {
-        if (err) console.log(err);
-        try {
-            const note = JSON.parse(jsonString);
-            
-            return res.json(note);
-        } catch (err) {
-            console.log('Error parsing JSON', err);
-        }
-    })
+
+    res.json(notesData);
+
 });
 
 
 router.post("/notes", function (req, res) {
 
-    const data = JSON.stringify(req.body, null, 2);
+    const data = req.body;
+    data.id = uuidv4(data.id);
+    notesData.push(data);
 
-    fs.appendFile('./db/db.json', data, (err) => {
+    fs.writeFile('db/db.json', JSON.stringify(notesData), (err) => {
         if (err) throw err;
         console.log('Data written to file');
     });
+
+    res.json(true)
 
 });
 
 
 
 
-// ---------------------------------------------------------------------------
-// I added this below code so you could clear out the table while working with the functionality.
-// Don"t worry about it!
 
-// router.post("/clear", function (req, res) {
-//   // Empty out the arrays of data
-//   tableData.length = 0;
-//   waitListData.length = 0;
+router.delete("/notes/:id", function (req, res) {
+    const targetedID = req.params.id;
+    notesData = notesData.filter((note, index) => {
+        return targetedID !== note.id;
+    })
 
-//   res.json({ ok: true });
-// });
+    fs.writeFile('db/db.json', JSON.stringify(notesData), (err) => {
+        if (err) throw err;
+        console.log('Data written to file');
+    });
 
-// ===============================================================================
-// EXPORT
-// Exports the router to be used as middleware
-// ===============================================================================
+    res.json(true);
+});
+
+
 module.exports = router;
